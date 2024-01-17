@@ -1,0 +1,1 @@
+Comfyui conditional node, it doesnt exist so am spending my whole night building it while am on a night shift and lacking proper sleep for 2 weeks, with only 2 pounds 10 pens in my account, what a happy life.
