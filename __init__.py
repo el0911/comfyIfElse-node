@@ -1,6 +1,15 @@
-class Example:
+class AnyType(str):
+  """A special class that is always equal in not equal comparisons. Credit to pythongosssss"""
+
+  def __ne__(self, __value: object) -> bool:
+    return False
+
+
+any_type = AnyType("*")
+
+class ComfyConditional:
     """
-    A example node
+    A example noade
 
     Class methods
     -------------
@@ -46,57 +55,53 @@ class Example:
         """
         return {
             "required": {
-                "image": ("IMAGE",),
-                "int_field": ("INT", {
-                    "default": 0, 
-                    "min": 0, #Minimum value
-                    "max": 4096, #Maximum value
-                    "step": 64, #Slider's step
+                "pipe": ("IMAGE",),
+                "condition_index": ("INT", {
+                    "default": 1, 
+                    "min": 1, #Minimum value
+                    "max": 2, #Maximum value
+                    "step": 1, #Slider's step
                     "display": "number" # Cosmetic only: display as "number" or "slider"
-                }),
-                "float_field": ("FLOAT", {
-                    "default": 1.0,
-                    "min": 0.0,
-                    "max": 10.0,
-                    "step": 0.01,
-                    "round": 0.001, #The value represeting the precision to round to, will be set to the step value by default. Can be set to False to disable rounding.
-                    "display": "number"}),
-                "print_to_screen": (["enable", "disable"],),
-                "string_field": ("STRING", {
-                    "multiline": False, #True if you want the field to look like the one on the ClipTextEncode node
-                    "default": "Hello World!"
-                }),
+                }),####for now just have a fixed condition 
+                # "float_field": ("FLOAT", {
+                #     "default": 1.0,
+                #     "min": 0.0,
+                #     "max": 10.0,
+                #     "step": 0.01,
+                #     "round": 0.001, #The value represeting the precision to round to, will be set to the step value by default. Can be set to False to disable rounding.
+                #     "display": "number"}),
+                # "print_to_screen": (["enable", "disable"],),
+                # "string_field": ("STRING", {
+                #     "multiline": False, #True if you want the field to look like the one on the ClipTextEncode node
+                #     "default": "Hello World!"
+                # }),
             },
         }
 
-    RETURN_TYPES = ("IMAGE",)
-    #RETURN_NAMES = ("image_output_name",)
+    RETURN_TYPES = (any_type,any_type)
+    RETURN_NAMES = ("CONDITION_1","CONDITION_2",)
 
-    FUNCTION = "test"
+    FUNCTION = "evaluate"
 
     #OUTPUT_NODE = False
 
-    CATEGORY = "Example"
+    CATEGORY = "Conditional"
 
-    def test(self, image, string_field, int_field, float_field, print_to_screen):
-        if print_to_screen == "enable":
-            print(f"""Your input contains:
-                string_field aka input text: {string_field}
-                int_field: {int_field}
-                float_field: {float_field}
-            """)
-        #do some processing on the image, in this example I just invert it
-        image = 1.0 - image
-        return (image,)
+    def evaluate(self, pipe,  condition_index):
+        if condition_index == 1:
+            return ([],pipe)
+        else:
+            return (pipe,[])
+         
 
 
 # A dictionary that contains all nodes you want to export with their names
 # NOTE: names should be globally unique
 NODE_CLASS_MAPPINGS = {
-    "Example": Example
+    "ComfyConditional": ComfyConditional
 }
 
 # A dictionary that contains the friendly/humanly readable titles for the nodes
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "Example": "Example Node"
+    "ComfyConditional": "Conditional Node"
 }
